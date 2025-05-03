@@ -1,43 +1,42 @@
 package com.kakaotechcampus.be1.lv2;
 
-import com.kakaotechcampus.be1.utils.Calculator;
 import com.kakaotechcampus.be1.utils.CalculatorInput;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class CalculatorWithClass implements Calculator {
+public class CalculatorLv2 {
     private final Scanner in;
-    private List<Integer> resultList;
+    private List<Double> resultList;
 
-    public CalculatorWithClass(Scanner in){
+    public CalculatorLv2(Scanner in){
         this.in = in;
         this.resultList = new ArrayList<>();
     }
 
-    @Override
     public void Calculate() {
         while(true) {
-            int fv;
-            char operator;
-            int sv;
-            int result;
+            int fv = 0;
+            char operator = '+';
+            int sv = 0;
+            double result = 0.0;
             try {
                 System.out.print("첫 번째 숫자를 입력하세요:");
-                fv = CalculatorInput.CheckInteger(in, false);
+                fv = CalculatorInput.InputInteger(in);
 
                 System.out.print("두 번째 숫자를 입력하세요:");
-                sv = CalculatorInput.CheckInteger(in, true);
+                sv = CalculatorInput.InputInteger(in);
 
                 System.out.print("사칙 연산을 입력하세요:");
-                operator = CalculatorInput.CheckCalculatorText(in);
+                operator = CalculatorInput.InputArithmeticOperation(in);
 
+                result = getResult(fv, operator, sv);
             } catch (RuntimeException e) {
                 System.out.println(e.getMessage());
                 continue;
             }
-            result = getResult(fv, operator, sv);
+
             System.out.println("결과: " + result);
             resultList.add(result);
 
@@ -61,8 +60,7 @@ public class CalculatorWithClass implements Calculator {
         }
     }
 
-    @Override
-    public int getResult(int fv, char operator, int sv) {
+    public double getResult(int fv, char operator, int sv) {
         if(operator == '+'){
             return fv + sv;
         }else if(operator == '-'){
@@ -70,7 +68,10 @@ public class CalculatorWithClass implements Calculator {
         }else if(operator == '*'){
             return fv * sv;
         }else if(operator == '/'){
-            return fv / sv;
+            if(sv == 0){
+                throw new RuntimeException("0 으로 나눌 수 없습니다.");
+            }
+            return (double)fv / sv;
         }else{
             return 0;
         }
@@ -83,11 +84,11 @@ public class CalculatorWithClass implements Calculator {
         resultList.remove(0);
     }
 
-    public List<Integer> getResultList() {
+    public List<Double> getResultList() {
         return resultList;
     }
 
-    public void setResultList(List<Integer> resultList) {
+    public void setResultList(List<Double> resultList) {
         this.resultList = resultList;
     }
 }
