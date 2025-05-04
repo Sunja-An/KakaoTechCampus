@@ -3,6 +3,8 @@ package com.kakaotechcampus.be1.lv1;
 import com.kakaotechcampus.be1.lv2.CalculatorLv2;
 import com.kakaotechcampus.be1.utils.CalculatorInput;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /*
@@ -49,6 +51,7 @@ public class Level1 {
 
         // * 본래 기능이 잘 수행되는지 Check
         calculatorLv2.Calculate();
+        System.out.println("[INFO] 현재까지 결과 출력");
         calculatorLv2.getResultList().forEach(System.out::println);
 
         /*
@@ -57,7 +60,13 @@ public class Level1 {
         */
 
         // * setter 와 getter 의 기능이 제대로 동작하는지 Check
-        calculatorLv2.setResultList(null);
+        System.out.println("[INFO] Getter 기능 확인");
+        calculatorLv2.getResultList().forEach(System.out::println);
+
+        System.out.println("[INFO] Setter 기능 확인");
+        List<Double> resultList = new ArrayList<>();
+        resultList.add(10.0);
+        calculatorLv2.setResultList(resultList);
         calculatorLv2.getResultList().forEach(System.out::println);
 
         System.out.println("[과제Lv.2] 계산기를 종료합니다.");
