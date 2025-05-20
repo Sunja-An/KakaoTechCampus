@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="130103eb-4377-46b5-b795-1bda525b849d" name="Changes" comment="Feat: Calculator Program completed &amp; Modify some detail" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="JUnit5 Test Class" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Sunja-An&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Sunja-An/kakao-tech-campus-BE-Task.git&quot;,
+    &quot;accountId&quot;: &quot;2f496466-9ea6-47c2-9bce-98cdedee594d&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2wKwkajHm04IS1MLMPKtu8NgTEY" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Application.Level1.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Level2.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Level3.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle./Users/sunwoo/Desktop/Study/kakao-tech-campus/Basic-Practice-1/build.gradle.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;create.test.in.the.same.root&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/sunwoo/Desktop/Study/kakao-tech-campus&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;/Users/sunwoo/Desktop/Study/kakao-tech-campus/src/Main.java&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Task-1" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="/Users/sunwoo/Desktop/Study/kakao-tech-campus/Basic-Practice-1/build.gradle" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/Basic-Practice-1/build.gradle" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list />
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle./Users/sunwoo/Desktop/Study/kakao-tech-campus/Basic-Practice-1/build.gradle" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.25410.129" />
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-IU-251.25410.129" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="130103eb-4377-46b5-b795-1bda525b849d" name="Changes" comment="" />
+      <created>1745803716515</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1745803716515</updated>
+      <workItem from="1745803717536" duration="9349000" />
+      <workItem from="1745833714696" duration="8361000" />
+      <workItem from="1746092413995" duration="4621000" />
+      <workItem from="1746173312971" duration="25403000" />
+      <workItem from="1746324771080" duration="1096000" />
+      <workItem from="1747131213229" duration="819000" />
+      <workItem from="1747357918729" duration="45000" />
+      <workItem from="1747660632605" duration="3000" />
+    </task>
+    <task id="LOCAL-00001" summary="Feat: First Setup On Task">
+      <option name="closed" value="true" />
+      <created>1745821806722</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1745821806722</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Feat: Calculator Interface added for Polymorphism on this calculator program">
+      <option name="closed" value="true" />
+      <created>1746201482936</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1746201482936</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Feat: Duplicated Input Method is gathered in this class">
+      <option name="closed" value="true" />
+      <created>1746201510551</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1746201510551</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Feat: Level 1 is completed">
+      <option name="closed" value="true" />
+      <created>1746201539619</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1746201539619</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Feat: Level 2 is completed">
+      <option name="closed" value="true" />
+      <created>1746201542613</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1746201542613</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Feat: Main Function modified for launching the method ( Calculate() Method )">
+      <option name="closed" value="true" />
+      <created>1746201566577</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1746201566577</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Feat: Calculator Program completed">
+      <option name="closed" value="true" />
+      <created>1746284241201</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1746284241201</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Feat: Calculator Program completed &amp; Modify some detail">
+      <option name="closed" value="true" />
+      <created>1746325258138</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1746325258138</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Feat: First Setup On Task" />
+    <MESSAGE value="Feat: Calculator Interface added for Polymorphism on this calculator program" />
+    <MESSAGE value="Feat: Duplicated Input Method is gathered in this class" />
+    <MESSAGE value="Feat: Level 1 is completed" />
+    <MESSAGE value="Feat: Level 2 is completed" />
+    <MESSAGE value="Feat: Main Function modified for launching the method ( Calculate() Method )" />
+    <MESSAGE value="Feat: Calculator Program completed" />
+    <MESSAGE value="Feat: Calculator Program completed &amp; Modify some detail" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: Calculator Program completed &amp; Modify some detail" />
+  </component>
+</project>
