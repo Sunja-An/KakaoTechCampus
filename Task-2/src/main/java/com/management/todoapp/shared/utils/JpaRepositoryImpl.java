@@ -2,7 +2,7 @@ package com.management.todoapp.shared.utils;
 
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.Field;
 import java.sql.*;
@@ -11,19 +11,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Component
-public class JpaRepositoryImpl<T, K> implements JpaRepository<T, K> {
-    @Value("database-path")
-    private String dbPath;
+@Repository
+public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
+    @Value("${database-path}")
+    private String dbPath="jdbc:h2:tcp://localhost/~/Database/kakaotech";
 
-    @Value("database-user")
-    private String dbUser;
+    @Value("${database-user}")
+    private String dbUser="sa";
 
-    @Value("database-password")
-    private String dbPassword;
+    @Value("${database-password}")
+    private String dbPassword="test";
 
-    @Value("database-driver-class-name")
-    private String dbClassName;
+    @Value("${database-driver-class-name}")
+    private String dbClassName = "org.h2.Driver";
 
     private Connection conn;
 
@@ -36,7 +36,7 @@ public class JpaRepositoryImpl<T, K> implements JpaRepository<T, K> {
 
     private String tableName;
 
-    private K dbIndex;
+    private U dbIndex;
 
     /*
     EntityManager entityManager;
@@ -133,7 +133,7 @@ public class JpaRepositoryImpl<T, K> implements JpaRepository<T, K> {
     }
 
     private void createEntity(){
-        this.tableName = this.tableObject.getSimpleName();
+        this.tableName = this.tableObject.getSimpleName().toLowerCase();
         Field[] fields = this.tableObject.getDeclaredFields();
         for (Field field : fields) {
             this.entitiesInfo.put(
@@ -156,8 +156,7 @@ public class JpaRepositoryImpl<T, K> implements JpaRepository<T, K> {
 
         try{
             this.stmt = conn.prepareStatement(sql.toString());
-            ResultSet rs = stmt.executeQuery();
-            rs.close();
+            stmt.execute();
         }catch(SQLException e){
             throw new RuntimeException("[WARN] SQL Error: " + e.getMessage());
         }

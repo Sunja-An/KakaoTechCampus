@@ -5,6 +5,8 @@ import com.management.todoapp.todo.repository.TodoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
+
 @Service
 @RequiredArgsConstructor
 public class TodoServiceImpl implements TodoService {
@@ -12,6 +14,11 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public ResponseTodoDto getTodo(String id) {
+        try{
+            todoRepository.findById(Long.parseLong(id));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return null;
     }
 }
