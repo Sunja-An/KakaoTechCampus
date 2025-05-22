@@ -4,6 +4,7 @@ import com.management.todoapp.author.dto.request.RequestCreateAuthor;
 import com.management.todoapp.author.entity.Author;
 import com.management.todoapp.author.service.AuthorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,12 @@ public class AuthorController implements AuthorApiDocs{
     @Override
     @PostMapping("")
     public ResponseEntity<?> createAuthor(@RequestBody RequestCreateAuthor author) {
-        return null;
+        return new ResponseEntity<>(
+                authorService.createAuthor(
+                        RequestCreateAuthor.from(author)
+                ),
+                HttpStatus.CREATED
+        );
     }
 
     @Override

@@ -1,12 +1,15 @@
 CREATE TABLE todo(
     todo_id INTEGER,
-    todo_title VARCHAR,
-    author INTEGER,
-    todo_password VARCHAR
+    todo_title VARCHAR(255),
+    author_id INTEGER,
+    todo_password VARCHAR(255),
+    PRIMARY KEY (todo_id) AUTO_INCREMENT,
+    FOREIGN KEY (author_id) REFERENCES author(author_id)
 );
 
 CREATE TABLE author(
     author_id INTEGER,
-    author_name VARCHAR,
-    author_email VARCHAR
-)
+    author_name VARCHAR(255),
+    author_email VARCHAR(255),
+    PRIMARY KEY (author_id) AUTO_INCREMENT
+);

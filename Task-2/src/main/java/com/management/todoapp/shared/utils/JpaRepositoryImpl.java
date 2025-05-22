@@ -1,0 +1,184 @@
+package com.management.todoapp.shared.utils;
+
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Field;
+import java.sql.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+@Component
+public class JpaRepositoryImpl<T, K> implements JpaRepository<T, K> {
+    @Value("database-path")
+    private String dbPath;
+
+    @Value("database-user")
+    private String dbUser;
+
+    @Value("database-password")
+    private String dbPassword;
+
+    @Value("database-driver-class-name")
+    private String dbClassName;
+
+    private Connection conn;
+
+    private PreparedStatement stmt;
+
+    @Setter
+    private Class<T> tableObject;
+
+    private final Map<String, Object> entitiesInfo = new HashMap<>();
+
+    private String tableName;
+
+    private K dbIndex;
+
+    /*
+    EntityManager entityManager;
+    */
+    public JpaRepositoryImpl(Class<T> tableObject) {
+        this.tableObject = tableObject;
+        init();
+    }
+
+    private void init() {
+        try{
+            if(dbPath == null || dbPath.isEmpty()) {
+                throw new RuntimeException("[ERROR] Database path is empty");
+            }
+            if(dbUser == null || dbUser.isEmpty()) {
+                throw new RuntimeException("[ERROR] Database user is empty");
+            }
+            if(dbPassword == null || dbPassword.isEmpty()) {
+                throw new RuntimeException("[ERROR] Database password is empty");
+            }
+
+            Class.forName(dbClassName);
+
+            this.conn = DriverManager.getConnection(dbPath, dbUser, dbPassword);
+
+        }catch(ClassNotFoundException | SQLException e){
+            throw new RuntimeException(e);
+        }
+
+        createEntity();
+    }
+
+    @Override
+    public Optional<T> findById(Long id) throws SQLException {
+        String query = "SELECT * FROM " + tableName + " WHERE " + tableName + "_id" +"=?";
+        this.stmt = conn.prepareStatement(query);
+        stmt.setLong(1, id);
+        ResultSet rs = stmt.executeQuery();
+        while(rs.next()){
+        }
+        rs.close();
+        return Optional.empty();
+    }
+
+    @Override
+    public List<T> findAll() throws SQLException {
+        String query = "SELECT * FROM " + tableName;
+        this.stmt = conn.prepareStatement(query);
+        ResultSet rs = stmt.executeQuery();
+        while(rs.next()){
+
+        }
+        rs.close();
+        return List.of();
+    }
+
+    @Override
+    public T save(Object object) throws SQLException {
+        StringBuilder sql = new StringBuilder()
+                .append("INSERT INTO ")
+                .append(tableName)
+                .append(" (");
+        for (Map.Entry<String, Object> entry : entitiesInfo.entrySet()) {
+            sql.append(entry.getKey()).append(",");
+        }
+        sql.deleteCharAt(sql.length() - 1)
+                .append(") VALUES(");
+        this.stmt = conn.prepareStatement(sql.toString());
+        ResultSet rs = stmt.executeQuery();
+        while(rs.next()){
+
+        }
+        rs.close();
+        return null;
+    }
+
+    @Override
+    public boolean delete(Long id) throws SQLException {
+        String query = "DELETE FROM " + tableName + " WHERE id=?";
+        this.stmt = conn.prepareStatement(query);
+        stmt.setLong(1, id);
+        stmt.executeQuery();
+        return false;
+    }
+
+    @Override
+    public void close() {
+        try{
+            stmt.close();
+            conn.close();
+        }catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void createEntity(){
+        this.tableName = this.tableObject.getSimpleName();
+        Field[] fields = this.tableObject.getDeclaredFields();
+        for (Field field : fields) {
+            this.entitiesInfo.put(
+                    StringUtils.makeSnakeCase(field.getName()),
+                    field.getType()
+            );
+        }
+        StringBuilder sql = new StringBuilder()
+                .append("CREATE TABLE ")
+                .append(tableName)
+                .append("(\n");
+
+        for (Map.Entry<String, Object> entry : entitiesInfo.entrySet()) {
+            sql.append(convertEntityToSql(entry.getKey(), entry.getValue()));
+        }
+
+        // Final (,) delete for SQL grammar.
+        sql.deleteCharAt(sql.length() - 1);
+        sql.append(");");
+
+        try{
+            this.stmt = conn.prepareStatement(sql.toString());
+            ResultSet rs = stmt.executeQuery();
+            rs.close();
+        }catch(SQLException e){
+            throw new RuntimeException("[WARN] SQL Error: " + e.getMessage());
+        }
+    }
+
+    private String convertEntityToSql(String rowName, Object rowType){
+
+        if(rowType instanceof String){
+            return rowName + " VARCHAR(255),";
+        }else if(rowType instanceof Integer){
+            return rowName + " INT,";
+        }else if(rowType instanceof Long){
+            return rowName + " BIGINT,";
+        }else if(rowType instanceof Double){
+            return rowName + " DOUBLE,";
+        }else if(rowType instanceof Float){
+            return rowName + " FLOAT,";
+        }else if(rowType instanceof Boolean){
+            return rowName + " BOOLEAN,";
+        }else{
+            return rowName + " TEXT,";
+        }
+    }
+}

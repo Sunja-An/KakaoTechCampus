@@ -12,4 +12,8 @@ import java.time.LocalDateTime;
 public class EntityInformation {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public EntityInformation(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
