@@ -14,15 +14,19 @@ public class CustomJpaConfig {
 
     @Bean
     public AuthorRepository authorRepository(){
-        JpaRepositoryImpl<Author, Long> jpaRepository = new JpaRepositoryImpl<>(Author.class);
-        ProxyFactory proxyFactory = new ProxyFactory(jpaRepository);
+        JpaRepositoryImpl<Author, Long> authRepositoryImpl = new JpaRepositoryImpl<>(Author.class);
+        ProxyFactory proxyFactory = new ProxyFactory();
+        proxyFactory.setTarget(authRepositoryImpl);
+        proxyFactory.setInterfaces(AuthorRepository.class);
         return (AuthorRepository) proxyFactory.getProxy();
     }
 
     @Bean
     public TodoRepository todoRepository(){
         JpaRepositoryImpl<Todo, Long> todoRepositoryImpl = new JpaRepositoryImpl<>(Todo.class);
-        ProxyFactory proxyFactory = new ProxyFactory(todoRepositoryImpl);
+        ProxyFactory proxyFactory = new ProxyFactory();
+        proxyFactory.setTarget(todoRepositoryImpl);
+        proxyFactory.setInterfaces(TodoRepository.class);
         return (TodoRepository) proxyFactory.getProxy();
     }
 }

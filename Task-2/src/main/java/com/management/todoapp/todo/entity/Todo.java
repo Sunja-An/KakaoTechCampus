@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "todo")
 @Getter
 @NoArgsConstructor
 public class Todo extends EntityInformation {

@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Table(name = "author")
 @NoArgsConstructor
 public class Author extends EntityInformation {
     private Long authorId;

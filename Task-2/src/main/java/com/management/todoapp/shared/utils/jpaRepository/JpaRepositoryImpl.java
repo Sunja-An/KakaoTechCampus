@@ -115,7 +115,7 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
     }
 
     @Override
-    public boolean delete(U id) throws SQLException {
+    public boolean deleteById(U id) throws SQLException {
         String query = "DELETE FROM " + tableName + " WHERE id=?";
         this.stmt = conn.prepareStatement(query);
         if(id instanceof Long){
