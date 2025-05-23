@@ -15,7 +15,7 @@ public class TodoServiceImpl implements TodoService {
     @Override
     public ResponseTodoDto getTodo(String id) {
         try{
-            todoRepository.findById(Long.parseLong(id));
+            todoRepository.findById((int) Long.parseLong(id));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

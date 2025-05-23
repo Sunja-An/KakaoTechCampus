@@ -2,9 +2,10 @@ package com.management.todoapp.shared.config;
 
 import com.management.todoapp.author.entity.Author;
 import com.management.todoapp.author.repository.AuthorRepository;
-import com.management.todoapp.shared.utils.JpaRepository;
-import com.management.todoapp.shared.utils.JpaRepositoryImpl;
+import com.management.todoapp.shared.utils.jpaRepository.JpaRepositoryImpl;
 import com.management.todoapp.todo.entity.Todo;
+import com.management.todoapp.todo.repository.TodoRepository;
+import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,11 +14,15 @@ public class CustomJpaConfig {
 
     @Bean
     public AuthorRepository authorRepository(){
-        return (AuthorRepository) new JpaRepositoryImpl<Author, Long>(Author.class);
+        JpaRepositoryImpl<Author, Long> jpaRepository = new JpaRepositoryImpl<>(Author.class);
+        ProxyFactory proxyFactory = new ProxyFactory(jpaRepository);
+        return (AuthorRepository) proxyFactory.getProxy();
     }
 
     @Bean
-    public JpaRepository<Todo, Long> todoRepository(){
-        return new JpaRepositoryImpl<Todo, Long>(Todo.class);
+    public TodoRepository todoRepository(){
+        JpaRepositoryImpl<Todo, Long> todoRepositoryImpl = new JpaRepositoryImpl<>(Todo.class);
+        ProxyFactory proxyFactory = new ProxyFactory(todoRepositoryImpl);
+        return (TodoRepository) proxyFactory.getProxy();
     }
 }

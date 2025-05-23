@@ -1,8 +1,8 @@
-package com.management.todoapp.shared.utils;
+package com.management.todoapp.shared.utils.jpaRepository;
 
+import com.management.todoapp.shared.utils.StringUtils.StringUtils;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.Field;
 import java.sql.*;
@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
 public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
     @Value("${database-path}")
     private String dbPath="jdbc:h2:tcp://localhost/~/Database/kakaotech";
@@ -70,10 +69,12 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
     }
 
     @Override
-    public Optional<T> findById(Long id) throws SQLException {
+    public Optional<T> findById(U id) throws SQLException {
         String query = "SELECT * FROM " + tableName + " WHERE " + tableName + "_id" +"=?";
         this.stmt = conn.prepareStatement(query);
-        stmt.setLong(1, id);
+        if(id instanceof Long){
+            stmt.setLong(1, (Long) id);
+        }
         ResultSet rs = stmt.executeQuery();
         while(rs.next()){
         }
@@ -114,10 +115,12 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
     }
 
     @Override
-    public boolean delete(Long id) throws SQLException {
+    public boolean delete(U id) throws SQLException {
         String query = "DELETE FROM " + tableName + " WHERE id=?";
         this.stmt = conn.prepareStatement(query);
-        stmt.setLong(1, id);
+        if(id instanceof Long){
+            stmt.setLong(1, (Long) id);
+        }
         stmt.executeQuery();
         return false;
     }

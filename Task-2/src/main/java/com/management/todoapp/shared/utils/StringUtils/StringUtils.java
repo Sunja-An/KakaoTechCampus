@@ -1,4 +1,4 @@
-package com.management.todoapp.shared.utils;
+package com.management.todoapp.shared.utils.StringUtils;
 
 public class StringUtils {
     public static String makeSnakeCase(String input){
