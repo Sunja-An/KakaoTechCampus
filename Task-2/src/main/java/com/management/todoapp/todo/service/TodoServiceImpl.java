@@ -29,7 +29,6 @@ public class TodoServiceImpl implements TodoService {
                 return null;
             }
             Todo todoObject = todo.get();
-            System.out.println(todoObject.toString());
 
             todoObject.setAuthor(
                     authorService.getAuthorById(todoObject.getAuthor().getAuthorId())
@@ -83,6 +82,11 @@ public class TodoServiceImpl implements TodoService {
     public List<ResponseTodoDto> getAllTodos() {
         try{
             List<Todo> todos = todoRepository.findAll();
+            for(Todo todo: todos){
+                todo.setAuthor(
+                        authorService.getAuthorById(todo.getAuthor().getAuthorId())
+                );
+            }
             return todos.stream().map(ResponseTodoDto::from).toList();
         } catch (SQLException e) {
             throw new RuntimeException(e);
