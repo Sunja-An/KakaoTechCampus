@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -14,9 +15,19 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
 
     @Override
-    public ResponseCreatedAuthor createAuthor(Author author) {
+    public void createAuthor(Author author) {
         try{
-            return ResponseCreatedAuthor.of(authorRepository.save(author));
+            authorRepository.save(author);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Author getAuthorByName(String AuthorName) {
+        try{
+            Optional<Author> author = authorRepository.findByAuthorName(AuthorName);
+            return author.orElse(null);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

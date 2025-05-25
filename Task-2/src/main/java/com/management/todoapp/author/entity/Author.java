@@ -1,7 +1,8 @@
 package com.management.todoapp.author.entity;
 
 import com.management.todoapp.shared.annotation.*;
-import com.management.todoapp.shared.entity.EntityInformation;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,20 +11,33 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Author extends EntityInformation {
+public class Author {
     @Id
     private Integer authorId;
 
+    @NotNull
     private String authorName;
 
+    @Email
     private String authorEmail;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     public Author(
             String authorName,
             String authorEmail
     ) {
-        super(LocalDateTime.now(), LocalDateTime.now());
         this.authorName = authorName;
         this.authorEmail = authorEmail;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public Author(
+            LocalDateTime updatedAt
+    ){
+        this.updatedAt = updatedAt;
     }
 }

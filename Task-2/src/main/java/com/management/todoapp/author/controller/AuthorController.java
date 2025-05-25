@@ -16,13 +16,11 @@ public class AuthorController implements AuthorApiDocs{
 
     @Override
     @PostMapping("")
-    public ResponseEntity<?> createAuthor(@RequestBody RequestCreateAuthor author) {
-        return new ResponseEntity<>(
-                authorService.createAuthor(
-                        RequestCreateAuthor.from(author)
-                ),
-                HttpStatus.CREATED
+    public ResponseEntity<?> createAuthor(@RequestBody RequestCreateAuthor requestCreateAuthor) {
+        authorService.createAuthor(
+                RequestCreateAuthor.from(requestCreateAuthor)
         );
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Override

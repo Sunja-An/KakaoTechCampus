@@ -4,5 +4,6 @@ import com.management.todoapp.author.dto.response.ResponseCreatedAuthor;
 import com.management.todoapp.author.entity.Author;
 
 public interface AuthorService {
-    ResponseCreatedAuthor createAuthor(Author author);
+    void createAuthor(Author author);
+    Author getAuthorByName(String AuthorName);
 }
