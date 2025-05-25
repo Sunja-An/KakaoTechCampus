@@ -1,9 +1,11 @@
 package com.management.todoapp.shared.utils.jpaRepository;
 
+import com.management.todoapp.shared.utils.StringUtils.SQLMapper;
 import com.management.todoapp.shared.utils.StringUtils.StringUtils;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.HashMap;
@@ -138,49 +140,29 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
     private void createEntity(){
         this.tableName = this.tableObject.getSimpleName().toLowerCase();
         Field[] fields = this.tableObject.getDeclaredFields();
+
         for (Field field : fields) {
-            this.entitiesInfo.put(
-                    StringUtils.makeSnakeCase(field.getName()),
-                    field.getType()
-            );
-        }
-        StringBuilder sql = new StringBuilder()
-                .append("CREATE TABLE ")
-                .append(tableName)
-                .append("(\n");
-
-        for (Map.Entry<String, Object> entry : entitiesInfo.entrySet()) {
-            sql.append(convertEntityToSql(entry.getKey(), entry.getValue()));
+            convertEntityPropertyToSql(field);
         }
 
-        // Final (,) delete for SQL grammar.
-        sql.deleteCharAt(sql.length() - 1);
-        sql.append(");");
-
+        String sql = SQLMapper.defineColumns(fields, this.tableName);
         try{
-            this.stmt = conn.prepareStatement(sql.toString());
+            printEntityInfo(sql);
+            this.stmt = conn.prepareStatement(sql);
             stmt.execute();
         }catch(SQLException e){
             throw new RuntimeException("[WARN] SQL Error: " + e.getMessage());
         }
     }
 
-    private String convertEntityToSql(String rowName, Object rowType){
+    private void convertEntityPropertyToSql(Field field){
+        this.entitiesInfo.put(
+                StringUtils.makeSnakeCase(field.getName()),
+                field.getType()
+        );
+    }
 
-        if(rowType instanceof String){
-            return rowName + " VARCHAR(255),";
-        }else if(rowType instanceof Integer){
-            return rowName + " INT,";
-        }else if(rowType instanceof Long){
-            return rowName + " BIGINT,";
-        }else if(rowType instanceof Double){
-            return rowName + " DOUBLE,";
-        }else if(rowType instanceof Float){
-            return rowName + " FLOAT,";
-        }else if(rowType instanceof Boolean){
-            return rowName + " BOOLEAN,";
-        }else{
-            return rowName + " TEXT,";
-        }
+    private void printEntityInfo(String sql){
+        System.out.println(sql);
     }
 }

@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 public class Author extends EntityInformation {
-    private Long authorId;
+    @Id
+    private Integer authorId;
 
     private String authorName;
 
