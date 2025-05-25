@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -76,6 +77,21 @@ public class TodoServiceImpl implements TodoService {
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<ResponseTodoDto> getAllTodos() {
+        try{
+            List<Todo> todos = todoRepository.findAll();
+            return todos.stream().map(ResponseTodoDto::from).toList();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<ResponseTodoDto> getPagingTodos() {
+        return List.of();
     }
 
     @Override

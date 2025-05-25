@@ -1,7 +1,5 @@
 package com.management.todoapp.todo.dto.request;
 
-import com.management.todoapp.todo.dto.response.ResponseTodoDto;
-
 import java.time.LocalDateTime;
 
 public record RequestModifyTodoDto(

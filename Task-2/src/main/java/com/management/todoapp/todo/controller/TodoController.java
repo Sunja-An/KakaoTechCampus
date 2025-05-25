@@ -26,7 +26,7 @@ public class TodoController implements TodoApiDocs{
     @Override
     @GetMapping("")
     public ResponseEntity<?> getTodos() {
-        return null;
+        return ResponseEntity.ok(todoService.getAllTodos());
     }
 
     /*

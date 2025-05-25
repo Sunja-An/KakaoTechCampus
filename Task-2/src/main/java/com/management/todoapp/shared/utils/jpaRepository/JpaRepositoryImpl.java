@@ -76,11 +76,9 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
             stmt.setInt(1, (Integer) id);
         }
         try(ResultSet rs = stmt.executeQuery()){
+            rs.next();
             instance = mapResultSetToObject(rs, this.tableObject);
-            if(instance != null){
-                return Optional.of(instance);
-            }
-            throw new RuntimeException("[ERROR] No such author");
+            return Optional.of(instance);
         }
     }
 
@@ -92,26 +90,23 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
         this.stmt = conn.prepareStatement(query);
         stmt.setString(1, authorName);
 
-        try(ResultSet rs = stmt.executeQuery();){
+        try(ResultSet rs = stmt.executeQuery()){
+            rs.next();
             instance = mapResultSetToObject(rs, this.tableObject);
-            if(instance != null){
-                return Optional.of(instance);
-            }
-            throw new RuntimeException("[ERROR] No such author");
+            return Optional.of(instance);
         }
     }
 
     @Override
     public List<T> findAll() throws SQLException {
         List<T> resultList = new ArrayList<>();
+        T instance;
         String query = "SELECT * FROM " + tableName;
         this.stmt = conn.prepareStatement(query);
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                T instance = mapResultSetToObject(rs, this.tableObject);
-                if (instance != null) {
-                    resultList.add(instance);
-                }
+                instance = mapResultSetToObject(rs, this.tableObject);
+                resultList.add(instance);
             }
         }
         return resultList;
@@ -256,48 +251,44 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
 
     private <T> T mapResultSetToObject(ResultSet rs, Class<T> clazz) throws SQLException {
         try {
-            List<T> resultList = new ArrayList<>();
-
             T instance = clazz.getDeclaredConstructor().newInstance();
             Field[] fields = clazz.getDeclaredFields();
 
-            while (rs.next()) {
-                for (Field field : fields) {
-                    // private Field 에 대한 접근 가능하도록 설정
-                    field.setAccessible(true);
+            for (Field field : fields) {
+                // private Field 에 대한 접근 가능하도록 설정
+                field.setAccessible(true);
 
-                    if (field.isAnnotationPresent(JoinColumn.class)) {
-                        JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
+                if (field.isAnnotationPresent(JoinColumn.class)) {
+                    JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
 
-                        assert joinColumn != null;
-                        String columnName = joinColumn.name();
+                    assert joinColumn != null;
+                    String columnName = joinColumn.name();
 
-                        Object fkValue = rs.getObject(columnName);
-                        if (fkValue != null) {
-                            Object referenceObject = field.getType().getDeclaredConstructor().newInstance();
+                    Object fkValue = rs.getObject(columnName);
+                    if (fkValue != null) {
+                        Object referenceObject = field.getType().getDeclaredConstructor().newInstance();
 
-                            // Hard Coding for 과제#2
-                            Field idField = field.getType().getDeclaredField("authorId");
-                            idField.setAccessible(true);
-                            idField.set(referenceObject, fkValue);
+                        // Hard Coding for 과제#2
+                        Field idField = field.getType().getDeclaredField("authorId");
+                        idField.setAccessible(true);
+                        idField.set(referenceObject, fkValue);
 
-                            field.set(instance, referenceObject);
-                        }
-                    } else {
-                        String columnName = field.getName();
-                        Object value = rs.getObject(StringUtils.makeSnakeCase(columnName));
-                        if(value == null){
-                            continue;
-                        }
-                        if (value instanceof java.sql.Timestamp) {
-                            value = ((java.sql.Timestamp) value).toLocalDateTime();
-                        }
-                        field.set(instance, value);
+                        field.set(instance, referenceObject);
                     }
+                } else {
+                    String columnName = field.getName();
+                    Object value = rs.getObject(StringUtils.makeSnakeCase(columnName));
+                    if (value == null) {
+                        continue;
+                    }
+                    if (value instanceof java.sql.Timestamp) {
+                        value = ((java.sql.Timestamp) value).toLocalDateTime();
+                    }
+                    field.set(instance, value);
                 }
-                resultList.add(instance);
             }
-            return resultList.isEmpty() ? null : resultList.get(0);
+
+            return instance;
         } catch (Exception e) {
             throw new SQLException(e.getMessage());
         }
