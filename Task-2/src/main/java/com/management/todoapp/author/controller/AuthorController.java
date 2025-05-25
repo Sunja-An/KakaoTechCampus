@@ -17,7 +17,7 @@ public class AuthorController implements AuthorApiDocs{
 
     @Override
     @PostMapping("")
-    public ResponseEntity<?> createAuthor(@Valid  @RequestBody RequestCreateAuthor requestCreateAuthor) {
+    public ResponseEntity<?> createAuthor(@Valid @RequestBody RequestCreateAuthor requestCreateAuthor) {
         authorService.createAuthor(
                 RequestCreateAuthor.from(requestCreateAuthor)
         );

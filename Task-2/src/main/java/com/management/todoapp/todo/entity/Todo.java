@@ -2,6 +2,7 @@ package com.management.todoapp.todo.entity;
 
 import com.management.todoapp.author.entity.Author;
 import com.management.todoapp.shared.annotation.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class Todo {
 
     @NotNull
     @Setter
+    @Max(200)
     private String todoTitle;
 
     @Setter

@@ -2,6 +2,7 @@ package com.management.todoapp.shared.utils.jpaRepository;
 
 import com.management.todoapp.shared.annotation.Id;
 import com.management.todoapp.shared.annotation.JoinColumn;
+import com.management.todoapp.shared.domain.Pageable;
 import com.management.todoapp.shared.utils.StringUtils.SQLMapper;
 import com.management.todoapp.shared.utils.StringUtils.StringUtils;
 import lombok.Setter;
@@ -101,13 +102,65 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
     public List<T> findAll() throws SQLException {
         List<T> resultList = new ArrayList<>();
         T instance;
-        String query = "SELECT * FROM " + tableName;
+        String query = SQLMapper.findAllSQLMapper(tableName);
         this.stmt = conn.prepareStatement(query);
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 instance = mapResultSetToObject(rs, this.tableObject);
                 resultList.add(instance);
             }
+        }
+        return resultList;
+    }
+
+    @Override
+    public List<T> findAll(Pageable pageable) throws SQLException {
+        List<T> resultList = new ArrayList<>();
+        List<Object> fieldValues = new ArrayList<>();
+        T instance;
+        String query = SQLMapper.findAllSQLMapper(pageable, tableName);
+
+        try{
+            Field[] fields = pageable.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                Object value = field.get(pageable);
+                if(field.getName().equals("page")){
+                    fieldValues.add(pageable.getPage()* pageable.getSize());
+                }else{
+                    fieldValues.add(value);
+                }
+            }
+        }catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        this.stmt = conn.prepareStatement(query);
+        int paramterIndex = 1;
+        for(Object value : fieldValues){
+
+            if(value == null){
+                continue;
+            }
+            if(value instanceof String){
+                System.out.println("paramterIndex = " + paramterIndex);
+                System.out.println("string value = " + (String) value);
+                stmt.setString(paramterIndex++, (String) value);
+            }else if(value instanceof Integer){
+                System.out.println("paramterIndex = " + paramterIndex);
+                System.out.println("integer value = " + (Integer) value);
+                stmt.setInt(paramterIndex++, (Integer) value);
+            }
+        }
+
+        System.out.println("query = " + query);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            System.out.println("rs = " + rs);
+            while (rs.next()) {
+                instance = mapResultSetToObject(rs, this.tableObject);
+                resultList.add(instance);
+            }
+            System.out.println("resultList = " + resultList);
         }
         return resultList;
     }
@@ -255,6 +308,7 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
             Field[] fields = clazz.getDeclaredFields();
 
             for (Field field : fields) {
+                System.out.println("[mapping] field = " + field);
                 // private Field 에 대한 접근 가능하도록 설정
                 field.setAccessible(true);
 

@@ -2,6 +2,7 @@ package com.management.todoapp.todo.service;
 
 import com.management.todoapp.author.entity.Author;
 import com.management.todoapp.author.service.AuthorService;
+import com.management.todoapp.shared.domain.Pageable;
 import com.management.todoapp.todo.dto.request.RequestModifyTodoDto;
 import com.management.todoapp.todo.dto.request.RequestPasswordDto;
 import com.management.todoapp.todo.dto.request.RequestTodoDto;
@@ -94,8 +95,19 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public List<ResponseTodoDto> getPagingTodos() {
-        return List.of();
+    public List<ResponseTodoDto> getPagingTodos(Pageable pageable) {
+        try{
+            List<Todo> todos = todoRepository.findAll(pageable);
+            for(Todo todo: todos){
+                todo.setAuthor(
+                        authorService.getAuthorById(todo.getAuthor().getAuthorId())
+                );
+            }
+            return todos.stream().map(ResponseTodoDto::from).toList();
+        } catch (SQLException e) {
+                throw new RuntimeException(e);
+        }
+
     }
 
     @Override

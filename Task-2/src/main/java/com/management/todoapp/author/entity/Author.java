@@ -15,10 +15,8 @@ public class Author {
     @Id
     private Integer authorId;
 
-    @NotNull
     private String authorName;
 
-    @Email
     private String authorEmail;
 
     private LocalDateTime createdAt;

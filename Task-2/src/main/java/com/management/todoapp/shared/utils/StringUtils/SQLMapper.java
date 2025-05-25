@@ -2,6 +2,7 @@ package com.management.todoapp.shared.utils.StringUtils;
 
 import com.management.todoapp.shared.annotation.Id;
 import com.management.todoapp.shared.annotation.JoinColumn;
+import com.management.todoapp.shared.domain.Pageable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -163,6 +164,41 @@ public class SQLMapper {
         sql.append(" WHERE ")
                 .append(whereClause)
                 .append("=?");
+        return sql.toString();
+    }
+
+    public static String findAllSQLMapper(String tableName){
+        return "SELECT * FROM " + tableName + " ORDER BY updated_at DESC";
+    };
+
+    public static String findAllSQLMapper(Pageable pageable, String tableName){
+        StringBuilder sql = new StringBuilder();
+        boolean hasWhereClause = false;
+
+        sql.append("SELECT * FROM ")
+            .append(tableName);
+
+        if(pageable.getAuthorId() != null){
+            sql.append(" WHERE author_id=?");
+            hasWhereClause = true;
+        }
+
+        if (pageable.getUpdatedAt() != null) {
+            if (hasWhereClause) {
+                sql.append(" AND");
+            } else {
+                sql.append(" WHERE");
+            }
+            sql.append(" DATE(updated_at)=?");
+        }
+
+        sql.append(" ORDER BY updated_at DESC");
+
+        if(pageable.getSize() != null && pageable.getPage() != null){
+            sql.append(" LIMIT ?")
+                .append(" OFFSET ?");
+        }
+
         return sql.toString();
     }
 }
