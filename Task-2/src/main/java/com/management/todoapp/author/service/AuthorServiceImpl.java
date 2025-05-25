@@ -24,8 +24,21 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    public Author getAuthorById(Integer id) {
+        try{
+            Optional<Author> author = authorRepository.findById(id);
+            return author.orElse(null);
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public Author getAuthorByName(String AuthorName) {
         try{
+            if(AuthorName == null){
+                return null;
+            }
             Optional<Author> author = authorRepository.findByAuthorName(AuthorName);
             return author.orElse(null);
         } catch (SQLException e) {

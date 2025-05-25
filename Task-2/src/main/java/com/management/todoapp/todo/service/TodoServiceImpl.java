@@ -3,6 +3,7 @@ package com.management.todoapp.todo.service;
 import com.management.todoapp.author.entity.Author;
 import com.management.todoapp.author.service.AuthorService;
 import com.management.todoapp.todo.dto.request.RequestModifyTodoDto;
+import com.management.todoapp.todo.dto.request.RequestPasswordDto;
 import com.management.todoapp.todo.dto.request.RequestTodoDto;
 import com.management.todoapp.todo.dto.response.ResponseTodoDto;
 import com.management.todoapp.todo.entity.Todo;
@@ -23,6 +24,16 @@ public class TodoServiceImpl implements TodoService {
     public ResponseTodoDto getTodo(String id) {
         try{
             Optional<Todo> todo = todoRepository.findById(Integer.parseInt(id));
+            if(todo.isEmpty()){
+                return null;
+            }
+            Todo todoObject = todo.get();
+            System.out.println(todoObject.toString());
+
+            todoObject.setAuthor(
+                    authorService.getAuthorById(todoObject.getAuthor().getAuthorId())
+            );
+
             return todo.map(ResponseTodoDto::from).orElse(null);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -48,15 +59,18 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public void deleteTodo(String id, String password) {
+    public void deleteTodo(String id, RequestPasswordDto requestPasswordDto) {
         try{
             Optional<Todo> todo = todoRepository.findById(Integer.parseInt(id));
             if(todo.isPresent()){
                 Todo todoObject = todo.get();
-                if(!todoObject.getPassword().equals(password)) {
+                System.out.println("todoObject = " + todoObject.getPassword());
+                System.out.println("password = " + requestPasswordDto.password());
+                if(!todoObject.getPassword().equals(requestPasswordDto.password())) {
                     throw new RuntimeException("[ERROR] Wrong password");
                 }
                 todoRepository.deleteById(Integer.parseInt(id));
+                return;
             }
             throw new RuntimeException("[ERROR] Wrong id");
         }catch(SQLException e){
@@ -65,15 +79,26 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public ResponseTodoDto updateTodo(String id, RequestModifyTodoDto requestTodoDto) {
+    public void updateTodo(String id, RequestModifyTodoDto requestTodoDto) {
         try{
             Optional<Todo> todo = todoRepository.findById(Integer.parseInt(id));
+            Author author;
             if(todo.isPresent()){
+                author = authorService.getAuthorByName(requestTodoDto.authorName());
+                if(author == null){
+                    throw new RuntimeException("[ERROR] Author not found");
+                }
+                Todo updatedObject = new Todo(
+                        Integer.parseInt(id),
+                        requestTodoDto.todoTitle(),
+                        author
+                );
                 Todo todoObject = todo.get();
                 if(!requestTodoDto.password().equals(todoObject.getPassword())) {
                     throw new RuntimeException("[ERROR] Wrong password");
                 }
-                return ResponseTodoDto.from(todoRepository.update(requestTodoDto));
+                todoRepository.update(updatedObject);
+                return;
             }
             throw new RuntimeException("[ERROR] Wrong id");
         }catch(SQLException e){

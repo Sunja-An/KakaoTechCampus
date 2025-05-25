@@ -1,6 +1,7 @@
 package com.management.todoapp.todo.controller;
 
 import com.management.todoapp.todo.dto.request.RequestModifyTodoDto;
+import com.management.todoapp.todo.dto.request.RequestPasswordDto;
 import com.management.todoapp.todo.dto.request.RequestTodoDto;
 import com.management.todoapp.todo.service.TodoService;
 import lombok.RequiredArgsConstructor;
@@ -46,8 +47,11 @@ public class TodoController implements TodoApiDocs{
 
     @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTodo(@PathVariable String id, @RequestBody String password) {
-        todoService.deleteTodo(id, password);
+    public ResponseEntity<?> deleteTodo(
+            @PathVariable String id,
+            @RequestBody RequestPasswordDto requestPasswordDto
+    ) {
+        todoService.deleteTodo(id, requestPasswordDto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -55,8 +59,9 @@ public class TodoController implements TodoApiDocs{
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateTodo(
             @PathVariable String id,
-            RequestModifyTodoDto requestModifyTodoDto
+            @RequestBody RequestModifyTodoDto requestModifyTodoDto
     ) {
-        return new ResponseEntity<>(todoService.updateTodo(id, requestModifyTodoDto), HttpStatus.OK);
+        todoService.updateTodo(id, requestModifyTodoDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

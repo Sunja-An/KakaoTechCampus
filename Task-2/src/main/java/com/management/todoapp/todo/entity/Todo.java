@@ -20,6 +20,7 @@ public class Todo {
     @Setter
     private String todoTitle;
 
+    @Setter
     @JoinColumn(name = "author_id")
     private Author author;
 
@@ -41,5 +42,28 @@ public class Todo {
         this.password = password;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public Todo(
+            Integer todoId,
+            String todoTitle,
+            Author author
+    ){
+        this.todoId = todoId;
+        this.todoTitle = todoTitle;
+        this.author = author;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "Todo{" +
+                "todoId=" + todoId +
+                ", todoTitle='" + todoTitle + '\'' +
+                ", author=" + author +
+                ", password='" + password + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

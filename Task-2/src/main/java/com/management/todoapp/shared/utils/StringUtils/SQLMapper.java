@@ -133,4 +133,36 @@ public class SQLMapper {
         sql.append(");");
         return sql.toString();
     }
+
+    public static String updateSQLMapper(Object dto, String tableName, String whereClause){
+        StringBuilder sql = new StringBuilder()
+                .append("UPDATE ")
+                .append(tableName)
+                .append(" SET ");
+        Field[] fields = dto.getClass().getDeclaredFields();
+        for(Field field : fields){
+            field.setAccessible(true);
+            try {
+                Object value = field.get(dto);
+                if (value != null) {
+                    if(field.isAnnotationPresent(Id.class)){
+                        continue;
+                    }
+                    if(ReferenceChecker.isReferenceObject(field.getType())){
+                        String newFieldName = field.getName() + "_id";
+                        sql.append(newFieldName).append(" = ? ,");
+                    }else{
+                        sql.append(StringUtils.makeSnakeCase(field.getName())).append(" = ?,");
+                    }
+                }
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("Failed to access field value", e);
+            }
+        }
+        sql.deleteCharAt(sql.length() - 1);
+        sql.append(" WHERE ")
+                .append(whereClause)
+                .append("=?");
+        return sql.toString();
+    }
 }

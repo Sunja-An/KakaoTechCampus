@@ -12,9 +12,10 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static com.management.todoapp.shared.utils.StringUtils.SQLMapper.isWrapperClass;
-
 public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
+    // @Value 어노테이션이 생성자가 주입되고 난 이후에 실행되어, properties 에 있는 값을 불러들이지 못하는
+    // 문제가 발생하여, 하드코딩으로 작성하였습니다.
+
     @Value("${database-path}")
     private String dbPath="jdbc:h2:tcp://localhost/~/Database/kakaotech";
 
@@ -69,12 +70,12 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
     @Override
     public Optional<T> findById(U id) throws SQLException {
         T instance;
-        String query = "SELECT * FROM " + tableName + " WHERE " + tableName + "_id" +"=?";
+        String query = "SELECT * FROM " + tableName + " WHERE " + StringUtils.makeSnakeCaseId(tableName) +"=?";
         this.stmt = conn.prepareStatement(query);
-        if(id instanceof Long){
-            stmt.setLong(1, (Long) id);
+        if(id instanceof Integer){
+            stmt.setInt(1, (Integer) id);
         }
-        try(ResultSet rs = stmt.executeQuery();){
+        try(ResultSet rs = stmt.executeQuery()){
             instance = mapResultSetToObject(rs, this.tableObject);
             if(instance != null){
                 return Optional.of(instance);
@@ -130,6 +131,7 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
                         && !field.getType().equals(String.class)
                         && !field.getType().equals(LocalDateTime.class)) {
 
+                    // HardCoding for 과제#2
                     Field idField = value.getClass().getDeclaredField("authorId");
                     idField.setAccessible(true);
                     value = idField.get(value); // 참조 객체의 id 값 추출
@@ -147,7 +149,6 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
         );
         this.stmt = conn.prepareStatement(query);
         for(Object value : fieldValues){
-            System.out.println("value = " + value);
             if(value == null){
                 continue;
             }
@@ -164,19 +165,66 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
     }
 
     @Override
-    public T update(Object object) throws SQLException {
-        String query = "UPDATE " + tableName + " SET " + "WHERE";
-        return null;
+    public void update(Object object) throws SQLException {
+        int idValue = 0;
+        List<Object> fieldValues = new ArrayList<>();
+        try{
+            Field[] fields = object.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                Object value = field.get(object);
+                if (value != null && !field.getType().isPrimitive()
+                        && !SQLMapper.isWrapperClass(field.getType())
+                        && !field.getType().equals(String.class)
+                        && !field.getType().equals(LocalDateTime.class)) {
+                    // HardCoding for 과제#2
+                    Field idField = value.getClass().getDeclaredField("authorId");
+                    idField.setAccessible(true);
+
+                    // 참조 객체의 id 값 추출
+                    value = idField.get(value);
+                }
+                if(value == null){
+                    continue;
+                }
+                if(field.isAnnotationPresent(Id.class)){
+                    idValue = (Integer) value;
+                    continue;
+                }
+                fieldValues.add(value);
+            }
+        }catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+
+        String query = SQLMapper.updateSQLMapper(object, tableName, StringUtils.makeSnakeCaseId(tableName));
+        this.stmt = conn.prepareStatement(query);
+        System.out.println("query = " + query);
+        for(Object value : fieldValues){
+            if(value == null){
+                continue;
+            }
+            if(value instanceof String){
+                stmt.setString(fieldValues.indexOf(value) + 1, (String) value);
+            }else if(value instanceof Integer){
+                stmt.setInt(fieldValues.indexOf(value) + 1, (Integer) value);
+            }else if(value instanceof LocalDateTime){
+                stmt.setTimestamp(fieldValues.indexOf(value) + 1, Timestamp.valueOf((LocalDateTime) value));
+            }
+        }
+        System.out.println("fieldValues = " + fieldValues.size() + 1 + " " + idValue);
+        stmt.setInt((fieldValues.size() + 1), idValue);
+        stmt.execute();
     }
 
     @Override
     public void deleteById(U id) throws SQLException {
-        String query = "DELETE FROM " + tableName + " WHERE "+ tableName + "_id=?";
+        String query = "DELETE FROM " + tableName + " WHERE "+ StringUtils.makeSnakeCaseId(tableName) +"=?";
         this.stmt = conn.prepareStatement(query);
         if(id instanceof Integer){
             stmt.setInt(1, (Integer) id);
         }
-        stmt.executeQuery();
+        stmt.execute();
     }
 
     @Override
@@ -210,32 +258,32 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
         try {
             List<T> resultList = new ArrayList<>();
 
+            T instance = clazz.getDeclaredConstructor().newInstance();
+            Field[] fields = clazz.getDeclaredFields();
+
             while (rs.next()) {
-                T instance = clazz.getDeclaredConstructor().newInstance();
-
-                Field[] fields = clazz.getDeclaredFields();
-
                 for (Field field : fields) {
+                    // private Field 에 대한 접근 가능하도록 설정
                     field.setAccessible(true);
 
                     if (field.isAnnotationPresent(JoinColumn.class)) {
                         JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
 
-                        String columnName = joinColumn.name(); // FK 컬럼 이름
+                        assert joinColumn != null;
+                        String columnName = joinColumn.name();
 
-                        Object fkValue = rs.getObject(columnName); // FK 값 조회
+                        Object fkValue = rs.getObject(columnName);
                         if (fkValue != null) {
                             Object referenceObject = field.getType().getDeclaredConstructor().newInstance();
 
+                            // Hard Coding for 과제#2
                             Field idField = field.getType().getDeclaredField("authorId");
                             idField.setAccessible(true);
                             idField.set(referenceObject, fkValue);
 
-                            // 참조 객체를 엔터티 필드에 설정
                             field.set(instance, referenceObject);
                         }
                     } else {
-                        // 일반 필드 처리
                         String columnName = field.getName();
                         Object value = rs.getObject(StringUtils.makeSnakeCase(columnName));
                         if(value == null){

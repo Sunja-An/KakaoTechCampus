@@ -9,7 +9,7 @@ public interface JpaRepository<T, U> {
     Optional<T> findByAuthorName(String authorName) throws SQLException;
     List<T> findAll() throws SQLException;
     void save(Object object) throws SQLException;
-    T update(Object object) throws SQLException;
+    void update(Object object) throws SQLException;
     void deleteById(U id) throws SQLException;
     void close();
 }
