@@ -1,6 +1,7 @@
 package com.management.todoapp.todo.controller;
 
-import com.management.todoapp.todo.entity.Todo;
+import com.management.todoapp.todo.dto.request.RequestModifyTodoDto;
+import com.management.todoapp.todo.dto.request.RequestTodoDto;
 import com.management.todoapp.todo.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,26 +16,47 @@ public class TodoController implements TodoApiDocs{
 
     @Override
     @PostMapping("")
-    public ResponseEntity<?> addTodo(String title, String description) {
-        todoService.getTodo(title);
+    public ResponseEntity<?> addTodo(@RequestBody RequestTodoDto requestTodoDto) {
+        todoService.createTodo(requestTodoDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    // Pagination 미처리
     @Override
     @GetMapping("")
     public ResponseEntity<?> getTodos() {
         return null;
     }
 
+    /*
+    // Pagination 처리
+
+    @Override
+    @GetMapping("")
+    public ResponseEntity<?> getTodos() {
+        return null;
+    }
+    */
+
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<?> getTodo(@PathVariable String id) {
-        return null;
+        return new ResponseEntity<>(todoService.getTodo(id), HttpStatus.OK);
     }
 
     @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTodo(@PathVariable String id) {
-        return null;
+    public ResponseEntity<?> deleteTodo(@PathVariable String id, @RequestBody String password) {
+        todoService.deleteTodo(id, password);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Override
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateTodo(
+            @PathVariable String id,
+            RequestModifyTodoDto requestModifyTodoDto
+    ) {
+        return new ResponseEntity<>(todoService.updateTodo(id, requestModifyTodoDto), HttpStatus.OK);
     }
 }

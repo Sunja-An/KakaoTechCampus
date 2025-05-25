@@ -1,16 +1,17 @@
 package com.management.todoapp.todo.controller;
 
+import com.management.todoapp.todo.dto.request.RequestModifyTodoDto;
+import com.management.todoapp.todo.dto.request.RequestTodoDto;
 import org.springframework.http.ResponseEntity;
 
 public interface TodoApiDocs {
-    ResponseEntity<?> addTodo(
-            String title,
-            String description
-    );
+    ResponseEntity<?> addTodo(RequestTodoDto requestTodoDto);
 
     ResponseEntity<?> getTodos();
 
     ResponseEntity<?> getTodo(String id);
 
-    ResponseEntity<?> deleteTodo(String id);
+    ResponseEntity<?> deleteTodo(String id, String password);
+
+    ResponseEntity<?> updateTodo(String id, RequestModifyTodoDto requestModifyTodoDto);
 }

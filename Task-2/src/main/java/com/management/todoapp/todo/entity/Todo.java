@@ -2,34 +2,44 @@ package com.management.todoapp.todo.entity;
 
 import com.management.todoapp.author.entity.Author;
 import com.management.todoapp.shared.annotation.*;
-import com.management.todoapp.shared.entity.EntityInformation;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
-public class Todo extends EntityInformation {
-    private Long todoId;
+public class Todo {
+    @Id
+    private Integer todoId;
 
+    @NotNull
+    @Setter
     private String todoTitle;
 
-    @ManyToOne()
     @JoinColumn(name = "author_id")
     private Author author;
 
+    @NotNull
     private String password;
+
+    private LocalDateTime createdAt;
+
+    @Setter
+    private LocalDateTime updatedAt;
 
     public Todo(
             String todoTitle,
             Author author,
             String password
     ) {
-        super(LocalDateTime.now(), LocalDateTime.now());
         this.todoTitle = todoTitle;
         this.author = author;
         this.password = password;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 }
