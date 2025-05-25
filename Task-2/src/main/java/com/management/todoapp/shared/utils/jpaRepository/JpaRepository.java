@@ -6,9 +6,10 @@ import java.util.Optional;
 
 public interface JpaRepository<T, U> {
     Optional<T> findById(U id) throws SQLException;
+    Optional<T> findByAuthorName(String authorName) throws SQLException;
     List<T> findAll() throws SQLException;
-    T save(Object object) throws SQLException;
-    boolean deleteById(U id) throws SQLException;
-
+    void save(Object object) throws SQLException;
+    T update(Object object) throws SQLException;
+    void deleteById(U id) throws SQLException;
     void close();
 }

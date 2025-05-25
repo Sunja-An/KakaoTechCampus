@@ -5,6 +5,10 @@ import com.management.todoapp.shared.annotation.JoinColumn;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 public class SQLMapper {
@@ -63,7 +67,12 @@ public class SQLMapper {
 
     private static String defineColumn(Field field){
         Class<?> fieldType = field.getType();
-        if (!fieldType.isPrimitive() && !isWrapperClass(fieldType) && !fieldType.equals(String.class)) {
+        if (!fieldType.isPrimitive()
+                && !isWrapperClass(fieldType)
+                && !fieldType.equals(String.class)
+                && !fieldType.equals(LocalDateTime.class)
+                && !fieldType.equals(LocalDate.class)
+                && !fieldType.equals(LocalTime.class)) {
             String newFieldName = field.getName() + "_id";
             return newFieldName + " INT,";
         }
@@ -71,18 +80,22 @@ public class SQLMapper {
     }
 
     private static String defineColumnType(Field field){
-        String fieldType = field.getType().getSimpleName();
+        String fieldType = field.getType().getCanonicalName();
+        System.out.println("fieldType = " + fieldType);
         fieldType = switch (fieldType) {
-            case "String" -> "VARCHAR(255)";
-            case "Integer" -> "INT";
-            case "Long" -> "BIGINT";
-            case "Boolean" -> "BOOLEAN";
-            case "Double" -> "DOUBLE";
-            case "Float" -> "FLOAT";
-            case "Char" -> "CHAR";
-            case "Byte" -> "TINYINT";
-            case "Short" -> "SMALLINT";
-            default -> fieldType;
+            case "java.lang.String" -> "VARCHAR(255)";
+            case "java.lang.Integer" -> "INT";
+            case "java.lang.Long" -> "BIGINT";
+            case "java.lang.Boolean" -> "BOOLEAN";
+            case "java.lang.Double" -> "DOUBLE";
+            case "java.lang.Float" -> "FLOAT";
+            case "java.lang.Character" -> "CHAR";
+            case "java.lang.Byte" -> "TINYINT";
+            case "java.lang.Short" -> "SMALLINT";
+            case "java.time.LocalDateTime" -> "DATETIME";
+            case "java.time.LocalDate" -> "DATE";
+            case "java.time.LocalTime" -> "TIME";
+            default -> throw new IllegalArgumentException("Unsupported field type: " + fieldType);
         };
         return fieldType;
     }
@@ -93,4 +106,26 @@ public class SQLMapper {
                 || clazz.equals(Byte.class) || clazz.equals(Short.class);
     }
 
+    public static String insertSQLMapper(Field[] fields, String tableName, List<Object> values){
+        StringBuilder sql = new StringBuilder()
+                .append("INSERT INTO ")
+                .append(tableName)
+                .append(" (");
+        for(Field field : fields){
+            if(field.getAnnotation(Id.class) == null){
+                sql.append(StringUtils.makeSnakeCase(field.getName())).append(",");
+            }
+        }
+        sql.deleteCharAt(sql.length() - 1);
+        sql.append(") VALUES (");
+        for (Object value : values) {
+            if(value == null){
+                continue;
+            }
+            sql.append("?, ");
+        }
+        sql.deleteCharAt(sql.length() - 2);
+        sql.append(");");
+        return sql.toString();
+    }
 }
