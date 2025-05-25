@@ -23,19 +23,4 @@ public class AuthorController implements AuthorApiDocs{
         );
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
-    @Override
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteAuthor(@PathVariable Long id) {
-        return null;
-    }
-
-    @Override
-    @PatchMapping("/{id}")
-    public ResponseEntity<?> updateAuthor(
-            @PathVariable String id,
-            @RequestBody RequestCreateAuthor author
-    ) {
-        return null;
-    }
 }

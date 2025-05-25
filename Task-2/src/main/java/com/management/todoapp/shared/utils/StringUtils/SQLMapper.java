@@ -189,7 +189,7 @@ public class SQLMapper {
             } else {
                 sql.append(" WHERE");
             }
-            sql.append(" DATE(updated_at)=?");
+            sql.append(" FORMATDATETIME(updated_at, 'yyyy-MM-dd') = ?");
         }
 
         sql.append(" ORDER BY updated_at DESC");

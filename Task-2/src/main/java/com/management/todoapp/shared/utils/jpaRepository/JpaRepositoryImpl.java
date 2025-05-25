@@ -137,17 +137,12 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
         this.stmt = conn.prepareStatement(query);
         int paramterIndex = 1;
         for(Object value : fieldValues){
-
             if(value == null){
                 continue;
             }
             if(value instanceof String){
-                System.out.println("paramterIndex = " + paramterIndex);
-                System.out.println("string value = " + (String) value);
                 stmt.setString(paramterIndex++, (String) value);
             }else if(value instanceof Integer){
-                System.out.println("paramterIndex = " + paramterIndex);
-                System.out.println("integer value = " + (Integer) value);
                 stmt.setInt(paramterIndex++, (Integer) value);
             }
         }
