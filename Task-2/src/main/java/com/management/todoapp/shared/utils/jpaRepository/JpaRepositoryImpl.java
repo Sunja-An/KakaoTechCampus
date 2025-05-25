@@ -1,6 +1,9 @@
 package com.management.todoapp.shared.utils.jpaRepository;
 
+import com.management.todoapp.shared.annotation.Id;
+import com.management.todoapp.shared.annotation.JoinColumn;
 import com.management.todoapp.shared.utils.StringUtils.SQLMapper;
+import com.management.todoapp.shared.utils.StringUtils.StringUtils;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -8,6 +11,8 @@ import java.lang.reflect.Field;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
+
+import static com.management.todoapp.shared.utils.StringUtils.SQLMapper.isWrapperClass;
 
 public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
     @Value("${database-path}")
@@ -117,11 +122,21 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
         try{
             Field[] fields = object.getClass().getDeclaredFields();
             for (Field field : fields) {
-                field.setAccessible(true); // private 필드에도 접근 가능하게 설정
-                Object value = field.get(object); // 필드 값 가져오기
+                field.setAccessible(true);
+                Object value = field.get(object);
+
+                if (value != null && !field.getType().isPrimitive()
+                        && !SQLMapper.isWrapperClass(field.getType())
+                        && !field.getType().equals(String.class)
+                        && !field.getType().equals(LocalDateTime.class)) {
+
+                    Field idField = value.getClass().getDeclaredField("authorId");
+                    idField.setAccessible(true);
+                    value = idField.get(value); // 참조 객체의 id 값 추출
+                }
                 fieldValues.add(value);
             }
-        }catch (IllegalAccessException e) {
+        }catch (IllegalAccessException | NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
 
@@ -136,6 +151,7 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
             if(value == null){
                 continue;
             }
+
             if(value instanceof String){
                 stmt.setString(fieldValues.indexOf(value), (String) value);
             }else if(value instanceof Integer){
@@ -201,20 +217,41 @@ public class JpaRepositoryImpl<T, U> implements JpaRepository<T, U> {
 
                 for (Field field : fields) {
                     field.setAccessible(true);
-                    String columnName = field.getName();
-                    Object value = rs.getObject(columnName);
 
-                    if (value != null) {
+                    if (field.isAnnotationPresent(JoinColumn.class)) {
+                        JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
+
+                        String columnName = joinColumn.name(); // FK 컬럼 이름
+
+                        Object fkValue = rs.getObject(columnName); // FK 값 조회
+                        if (fkValue != null) {
+                            Object referenceObject = field.getType().getDeclaredConstructor().newInstance();
+
+                            Field idField = field.getType().getDeclaredField("authorId");
+                            idField.setAccessible(true);
+                            idField.set(referenceObject, fkValue);
+
+                            // 참조 객체를 엔터티 필드에 설정
+                            field.set(instance, referenceObject);
+                        }
+                    } else {
+                        // 일반 필드 처리
+                        String columnName = field.getName();
+                        Object value = rs.getObject(StringUtils.makeSnakeCase(columnName));
+                        if(value == null){
+                            continue;
+                        }
+                        if (value instanceof java.sql.Timestamp) {
+                            value = ((java.sql.Timestamp) value).toLocalDateTime();
+                        }
                         field.set(instance, value);
                     }
                 }
-
                 resultList.add(instance);
             }
-
             return resultList.isEmpty() ? null : resultList.get(0);
         } catch (Exception e) {
-            throw new SQLException("Failed to map ResultSet to object");
+            throw new SQLException(e.getMessage());
         }
     }
 }

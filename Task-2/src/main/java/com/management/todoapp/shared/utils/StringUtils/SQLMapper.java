@@ -100,7 +100,7 @@ public class SQLMapper {
         return fieldType;
     }
 
-    private static boolean isWrapperClass(Class<?> clazz) {
+    public static boolean isWrapperClass(Class<?> clazz) {
         return clazz.equals(Integer.class) || clazz.equals(Long.class) || clazz.equals(Double.class)
                 || clazz.equals(Float.class) || clazz.equals(Boolean.class) || clazz.equals(Character.class)
                 || clazz.equals(Byte.class) || clazz.equals(Short.class);
@@ -113,7 +113,12 @@ public class SQLMapper {
                 .append(" (");
         for(Field field : fields){
             if(field.getAnnotation(Id.class) == null){
-                sql.append(StringUtils.makeSnakeCase(field.getName())).append(",");
+                if(ReferenceChecker.isReferenceObject(field.getType())){
+                    String newFieldName = field.getName() + "_id";
+                    sql.append(newFieldName).append(",");
+                }else{
+                    sql.append(StringUtils.makeSnakeCase(field.getName())).append(",");
+                }
             }
         }
         sql.deleteCharAt(sql.length() - 1);

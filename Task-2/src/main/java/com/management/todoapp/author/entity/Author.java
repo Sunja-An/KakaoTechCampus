@@ -25,6 +25,10 @@ public class Author {
 
     private LocalDateTime updatedAt;
 
+    private Author(Integer authorId) {
+        this.authorId = authorId;
+    }
+
     public Author(
             String authorName,
             String authorEmail

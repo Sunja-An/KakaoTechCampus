@@ -1,5 +1,6 @@
 package com.management.todoapp.todo.service;
 
+import com.management.todoapp.author.entity.Author;
 import com.management.todoapp.author.service.AuthorService;
 import com.management.todoapp.todo.dto.request.RequestModifyTodoDto;
 import com.management.todoapp.todo.dto.request.RequestTodoDto;
@@ -39,6 +40,7 @@ public class TodoServiceImpl implements TodoService {
                     authorService.getAuthorByName(requestTodoDto.author()),
                     requestTodoDto.password()
             );
+            System.out.println("todo = " + todo.getAuthor());
             todoRepository.save(todo);
         }catch(SQLException e){
             throw new RuntimeException(e);
