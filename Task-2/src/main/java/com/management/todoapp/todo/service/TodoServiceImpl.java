@@ -3,6 +3,10 @@ package com.management.todoapp.todo.service;
 import com.management.todoapp.author.entity.Author;
 import com.management.todoapp.author.service.AuthorService;
 import com.management.todoapp.shared.domain.Pageable;
+import com.management.todoapp.shared.exception.ContentLengthException;
+import com.management.todoapp.shared.exception.NoAuthorException;
+import com.management.todoapp.shared.exception.NoTodoException;
+import com.management.todoapp.shared.exception.PasswordMismatchException;
 import com.management.todoapp.todo.dto.request.RequestModifyTodoDto;
 import com.management.todoapp.todo.dto.request.RequestPasswordDto;
 import com.management.todoapp.todo.dto.request.RequestTodoDto;
@@ -45,7 +49,7 @@ public class TodoServiceImpl implements TodoService {
     public void createTodo(RequestTodoDto requestTodoDto) {
         try{
             if(requestTodoDto.title().length() > 200){
-                throw new RuntimeException("[ERROR] Title is too long");
+                throw new ContentLengthException("[ERROR] Title is too long");
             }
             Todo todo = new Todo(
                     requestTodoDto.title(),
@@ -68,12 +72,12 @@ public class TodoServiceImpl implements TodoService {
                 System.out.println("todoObject = " + todoObject.getPassword());
                 System.out.println("password = " + requestPasswordDto.password());
                 if(!todoObject.getPassword().equals(requestPasswordDto.password())) {
-                    throw new RuntimeException("[ERROR] Wrong password");
+                    throw new PasswordMismatchException("[ERROR] Wrong password");
                 }
                 todoRepository.deleteById(Integer.parseInt(id));
                 return;
             }
-            throw new RuntimeException("[ERROR] Wrong id");
+            throw new NoTodoException("[ERROR] Wrong id");
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
@@ -118,7 +122,7 @@ public class TodoServiceImpl implements TodoService {
             if(todo.isPresent()){
                 author = authorService.getAuthorByName(requestTodoDto.authorName());
                 if(author == null){
-                    throw new RuntimeException("[ERROR] Author not found");
+                    throw new NoAuthorException("[ERROR] Author not found");
                 }
                 Todo updatedObject = new Todo(
                         Integer.parseInt(id),
@@ -127,12 +131,12 @@ public class TodoServiceImpl implements TodoService {
                 );
                 Todo todoObject = todo.get();
                 if(!requestTodoDto.password().equals(todoObject.getPassword())) {
-                    throw new RuntimeException("[ERROR] Wrong password");
+                    throw new PasswordMismatchException("[ERROR] Wrong password");
                 }
                 todoRepository.update(updatedObject);
                 return;
             }
-            throw new RuntimeException("[ERROR] Wrong id");
+            throw new NoTodoException("[ERROR] Wrong id");
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
