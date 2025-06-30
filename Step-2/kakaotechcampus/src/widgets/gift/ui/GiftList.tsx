@@ -4,7 +4,16 @@ import { GET_GIFTS } from "@/widgets/gift/api/gift.action";
 import { type ResponseGiftDto } from "@/widgets/gift/types/gift";
 
 async function GiftList() {
-  const data: ResponseGiftDto[] = await GET_GIFTS();
+  const data: ResponseGiftDto[] | undefined = await GET_GIFTS();
+  if (data === undefined) {
+    return (
+      <div className="box-border p-4 w-full flex flex-col justify-start items-start rounded-md gap-4">
+        <h1 className="font-bold text-3xl text-black">
+          🥲 서버에 오류가 생겼습니다.
+        </h1>
+      </div>
+    );
+  }
   if (data.length === 0) {
     return (
       <div className="box-border p-4 w-full flex flex-col justify-start items-start rounded-md gap-4">
