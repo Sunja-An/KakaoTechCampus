@@ -12,9 +12,21 @@ function MainHeader() {
       <div className="logo"></div>
       <nav className="min-w-60 h-full">
         <ul className="w-full h-full flex justify-around items-center">
-          <li className="text-sm text-black font-semibold">Step 1</li>
-          <li className="text-sm text-black font-semibold">Step 2</li>
-          <li className="text-sm text-black font-semibold">Step 3</li>
+          <Link href={"/first"}>
+            <li className="px-4 py-2 text-sm text-black font-semibold duration-200 hover:bg-gray-300 rounded-md">
+              Step 1
+            </li>
+          </Link>
+          <Link href={"/second"}>
+            <li className="px-4 py-2 text-sm text-black font-semibold duration-200 hover:bg-gray-300 rounded-md">
+              Step 2
+            </li>
+          </Link>
+          <Link href={"/third"}>
+            <li className="px-4 py-2 text-sm text-black font-semibold duration-200 hover:bg-gray-300 rounded-md">
+              Step 3
+            </li>
+          </Link>
         </ul>
       </nav>
     </header>

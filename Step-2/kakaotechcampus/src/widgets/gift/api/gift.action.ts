@@ -17,10 +17,10 @@ export const POST_GIFT = async (props: RequestGiftDto) => {
   }
 };
 
-export const MODIFY_GIFT = async (props: RequestModifyGiftDto) => {
+export const MODIFY_GIFT = async (id: number, props: RequestModifyGiftDto) => {
   try {
-    const res = await KTC_API.patch(`/api/products`, props);
-    if (res.status === 201) {
+    const res = await KTC_API.patch(`/api/products/${id}`, props);
+    if (res.status === 200) {
       return true;
     }
   } catch (err) {

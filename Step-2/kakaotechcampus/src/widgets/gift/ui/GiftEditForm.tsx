@@ -5,12 +5,15 @@ import React from "react";
 import { RequestGiftDto } from "../types/gift";
 import { useGift } from "../hooks/useGift";
 import { MODIFY_GIFT } from "../api/gift.action";
+import { useRouter } from "next/navigation";
 
 type GiftEditFormType = {
+  id: number;
   props: RequestGiftDto;
 };
 
-function GiftEditForm({ props }: GiftEditFormType) {
+function GiftEditForm({ id, props }: GiftEditFormType) {
+  const router = useRouter();
   const {
     gift,
     onChangeGiftId,
@@ -20,9 +23,10 @@ function GiftEditForm({ props }: GiftEditFormType) {
   } = useGift(props);
 
   const onSubmit = async () => {
-    const res = await MODIFY_GIFT(gift);
+    const res = await MODIFY_GIFT(id, gift);
     if (res === true) {
       alert("성공하였습니다.");
+      router.replace(`/gift/${id}`);
     } else {
       alert("실패하였습니다.");
     }

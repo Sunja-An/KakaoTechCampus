@@ -27,7 +27,7 @@ export default async function page({
       <div className="w-full flex justify-center items-center">
         <h1 className="font-bold text-3xl text-black">상품 수정</h1>
       </div>
-      <GiftEditForm props={data} />
+      <GiftEditForm id={id} props={data} />
     </div>
   );
 }

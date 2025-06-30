@@ -40,8 +40,8 @@ export default async function page({
         )}
       </section>
       <section className="w-full flex justify-center items-center">
-        <ModifyButton />
-        <DeleteButton />
+        <ModifyButton id={id} />
+        <DeleteButton id={id} />
       </section>
     </div>
   );

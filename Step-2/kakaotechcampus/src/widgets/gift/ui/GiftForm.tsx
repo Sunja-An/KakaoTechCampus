@@ -4,8 +4,10 @@ import React from "react";
 import { CancelButton, TextInput, UploadButton } from "@/components";
 import { POST_GIFT } from "@/widgets/gift/api/gift.action";
 import { useGift } from "../hooks/useGift";
+import { useRouter } from "next/navigation";
 
 function GiftForm() {
+  const router = useRouter();
   const {
     gift,
     onChangeGiftId,
@@ -18,6 +20,7 @@ function GiftForm() {
     const res = await POST_GIFT(gift);
     if (res === true) {
       alert("성공하였습니다.");
+      router.replace("/gift");
     } else {
       alert("실패하였습니다.");
     }

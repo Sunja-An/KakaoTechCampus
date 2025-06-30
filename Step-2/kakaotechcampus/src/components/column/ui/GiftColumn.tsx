@@ -1,3 +1,5 @@
+"use client";
+
 import { DeleteButton, ModifyButton } from "@/components/button";
 import Link from "next/link";
 import React from "react";
@@ -33,8 +35,8 @@ function GiftColumn({
           <span className="font-medium text-sm text-black">{giftPhotoUrl}</span>
         </div>
         <div className="w-1/5 flex justify-center items-center gap-4">
-          <ModifyButton />
-          <DeleteButton />
+          <ModifyButton id={id} />
+          <DeleteButton id={id} />
         </div>
       </div>
     </Link>
