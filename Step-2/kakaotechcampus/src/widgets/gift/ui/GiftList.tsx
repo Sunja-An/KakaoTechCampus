@@ -29,18 +29,24 @@ function GiftList({ data }: GiftListType) {
             <span className="font-medium text-sm text-black">OPTION</span>
           </div>
         </div>
-        {data.map((item: ResponseGiftDto, key: number) => {
-          return (
-            <GiftColumn
-              id={item.id}
-              giftId={item.giftId}
-              giftName={item.giftName}
-              giftPhotoUrl={item.giftPhotoUrl}
-              giftPrice={item.giftPrice}
-              key={key}
-            />
-          );
-        })}
+        {data.length !== 0 ? (
+          data.map((item: ResponseGiftDto, key: number) => {
+            return (
+              <GiftColumn
+                id={item.id}
+                giftId={item.giftId}
+                giftName={item.giftName}
+                giftPhotoUrl={item.giftPhotoUrl}
+                giftPrice={item.giftPrice}
+                key={key}
+              />
+            );
+          })
+        ) : (
+          <div>
+            <h1 className="">상품이 없습니다..</h1>
+          </div>
+        )}
       </div>
     </Suspense>
   );
