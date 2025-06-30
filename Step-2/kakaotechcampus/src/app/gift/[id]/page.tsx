@@ -2,8 +2,14 @@ import { DeleteButton, ModifyButton } from "@/components";
 import { GET_GIFT, ResponseGiftDto } from "@/widgets";
 import React from "react";
 
-export default async function page({ params }: { params: { id: number } }) {
-  const { id } = params;
+export default async function page({
+  params,
+}: {
+  params: Promise<{ id: number }>;
+}) {
+  const { id } = (await params) ?? {
+    id: 0,
+  };
 
   if (id === undefined) {
     return (

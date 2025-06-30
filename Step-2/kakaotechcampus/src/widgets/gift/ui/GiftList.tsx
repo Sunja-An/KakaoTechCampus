@@ -1,7 +1,19 @@
 import { GiftColumn } from "@/components";
 import React from "react";
+import { GET_GIFTS } from "@/widgets/gift/api/gift.action";
+import { type ResponseGiftDto } from "@/widgets/gift/types/gift";
 
-function GiftList() {
+async function GiftList() {
+  const data: ResponseGiftDto[] = await GET_GIFTS();
+  if (data.length === 0) {
+    return (
+      <div className="box-border p-4 w-full flex flex-col justify-start items-start border border-gray-300 rounded-md gap-4">
+        <h1 className="font-bold text-4xl text-black">
+          등록된 상품이 없습니다!
+        </h1>
+      </div>
+    );
+  }
   return (
     <div className="box-border p-4 w-full flex flex-col justify-start items-start border border-gray-300 rounded-md gap-4">
       <div className="box-border py-4 px-8 w-full flex justify-between items-center rounded-md gap-4 border-b border-gray-200">
@@ -21,13 +33,18 @@ function GiftList() {
           <span className="font-medium text-sm text-black">OPTION</span>
         </div>
       </div>
-      <GiftColumn
-        id={1}
-        giftId={2040}
-        giftName="기프트입니다."
-        giftPhotoUrl="test"
-        giftPrice={30000}
-      />
+      {data.map((item: ResponseGiftDto, key: number) => {
+        return (
+          <GiftColumn
+            id={item.id}
+            giftId={item.giftId}
+            giftName={item.giftName}
+            giftPhotoUrl={item.giftPhotoUrl}
+            giftPrice={item.giftPrice}
+            key={key}
+          />
+        );
+      })}
     </div>
   );
 }

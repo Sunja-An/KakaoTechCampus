@@ -5,6 +5,13 @@ export type RequestGiftDto = {
   giftPhotoUrl: string;
 };
 
+export type RequestModifyGiftDto = {
+  giftId: number;
+  giftName: string;
+  giftPrice: number;
+  giftPhotoUrl: string;
+};
+
 export type ResponseGiftDto = {
   id: number;
   giftId: number;

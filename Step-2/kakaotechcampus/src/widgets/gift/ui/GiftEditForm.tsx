@@ -1,27 +1,33 @@
 "use client";
 
-import React from "react";
 import { CancelButton, TextInput, UploadButton } from "@/components";
-import { POST_GIFT } from "@/widgets/gift/api/gift.action";
+import React from "react";
+import { RequestGiftDto } from "../types/gift";
 import { useGift } from "../hooks/useGift";
+import { MODIFY_GIFT } from "../api/gift.action";
 
-function GiftForm() {
+type GiftEditFormType = {
+  props: RequestGiftDto;
+};
+
+function GiftEditForm({ props }: GiftEditFormType) {
   const {
     gift,
     onChangeGiftId,
     onChangeGiftName,
     onChangeGiftPhotoUrl,
     onChangeGiftPrice,
-  } = useGift();
+  } = useGift(props);
 
   const onSubmit = async () => {
-    const res = await POST_GIFT(gift);
+    const res = await MODIFY_GIFT(gift);
     if (res === true) {
       alert("성공하였습니다.");
     } else {
       alert("실패하였습니다.");
     }
   };
+
   return (
     <div className="box-border px-60 w-full flex flex-col justify-start items-start gap-8">
       <div className="w-full flex flex-col justify-start items-start gap-4">
@@ -66,4 +72,4 @@ function GiftForm() {
   );
 }
 
-export { GiftForm };
+export { GiftEditForm };
