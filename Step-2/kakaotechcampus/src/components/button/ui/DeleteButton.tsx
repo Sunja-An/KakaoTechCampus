@@ -8,9 +8,9 @@ function DeleteButton({ id }: { id: number }) {
   const router = useRouter();
   const onClickDelete = async () => {
     const res = await DELETE_GIFT(id);
-    if (res.status === 204) {
+    if (res) {
       alert(`상품 ${id}번을 삭제하였습니다.`);
-      router.refresh();
+      router.replace("/gift");
     } else {
       alert("상품 삭제에 실패하였습니다.");
     }

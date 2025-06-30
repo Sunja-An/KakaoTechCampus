@@ -1,9 +1,13 @@
 import React from "react";
 
-import { GiftList } from "@/widgets";
+import { GET_GIFTS, GiftList, type ResponseGiftDto } from "@/widgets";
 import { AddButton } from "@/components";
 
 export default async function GiftListPage() {
+  const data: ResponseGiftDto[] = await GET_GIFTS();
+  if (!data) {
+    return <h1>Loading gifts...</h1>;
+  }
   return (
     <div className="relative w-full flex flex-col justify-start items-start gap-8">
       <section className="w-full flex flex-col justify-center items-center gap-4">
@@ -17,7 +21,7 @@ export default async function GiftListPage() {
           <AddButton />
         </div>
         <div className="w-full flex flex-col justify-start items-center">
-          <GiftList />
+          <GiftList data={data} />
         </div>
       </section>
     </div>

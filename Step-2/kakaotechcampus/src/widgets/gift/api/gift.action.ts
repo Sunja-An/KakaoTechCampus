@@ -32,7 +32,7 @@ export const DELETE_GIFT = async (id: number) => {
   try {
     const res = await KTC_API.delete(`/api/products/${id}`);
     if (res.status === 204) {
-      return res.data;
+      return true;
     }
   } catch (err) {
     return err;
