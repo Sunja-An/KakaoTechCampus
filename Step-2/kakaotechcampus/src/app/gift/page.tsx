@@ -3,7 +3,7 @@ import React from "react";
 import { GiftList } from "@/widgets";
 import { AddButton } from "@/components";
 
-export default function page() {
+export default async function GiftListPage() {
   return (
     <div className="relative w-full flex flex-col justify-start items-start gap-8">
       <section className="w-full flex flex-col justify-center items-center gap-4">
